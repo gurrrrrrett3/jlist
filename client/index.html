@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The List</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>The List</h1>
+
+      <div class="links"></div>
+    </div>
+
+    <div class="list">
+      <ul class="items">
+      </ul>
+    </div>
+  </body>
+  <script>
+    const listData = JSON.parse("{}");
+
+    updateList();
+   
+    // admin panel
+
+    let keys = [];
+    document.addEventListener("keydown", (ev) => {
+      keys.push(ev.key);
+      fetch("/api/keys", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          keys: keys,
+        }),
+      }).then((res) => {
+        if (res.status === 200) {
+          res.text().then((text) => {
+            console.log(text);
+            window.location.pathname = text;
+          });
+        }
+      });
+    });
+
+    function updateList() {
+        if (Object.keys(listData).length !== 0) {
+      listData.items.forEach((item) => {
+        const li = document.createElement("li");
+        li.innerHTML = item.strikethrough ? `<s>${item.name}</s>` : item.name;
+        document.querySelector(".items").appendChild(li);
+      });
+    } else {
+        fetch("/api/lists")
+        .then((res) => res.json())
+        .then((data) => {
+            document.querySelector(".links").innerHTML = "";
+          data.forEach((list) => {
+            const a = document.createElement("a");
+            a.innerText = list.name;
+            a.href = `/${list.path}`;
+            document.querySelector(".links").appendChild(a);
+          });
+        });
+    }
+
+    }
+  </script>
+</html>
