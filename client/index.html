@@ -15,15 +15,14 @@
     </div>
 
     <div class="list">
-      <ul class="items">
-      </ul>
+      <ul class="items"></ul>
     </div>
   </body>
   <script>
-    const listData = JSON.parse("{}");
+    const listId = window.location.pathname.split("/")[2];
 
     updateList();
-   
+
     // admin panel
 
     let keys = [];
@@ -48,26 +47,29 @@
     });
 
     function updateList() {
-        if (Object.keys(listData).length !== 0) {
-      listData.items.forEach((item) => {
-        const li = document.createElement("li");
-        li.innerHTML = item.strikethrough ? `<s>${item.name}</s>` : item.name;
-        document.querySelector(".items").appendChild(li);
-      });
-    } else {
-        fetch("/api/lists")
-        .then((res) => res.json())
-        .then((data) => {
-            document.querySelector(".links").innerHTML = "";
-          data.forEach((list) => {
-            const a = document.createElement("a");
-            a.innerText = list.name;
-            a.href = `/${list.path}`;
-            document.querySelector(".links").appendChild(a);
+      if (listId !== undefined) {
+        fetch(`/api/lists/${listId}`)
+          .then((res) => res.json())
+          .then((listData) => {
+            listData.items.forEach((item) => {
+              const li = document.createElement("li");
+              li.innerHTML = item.strikethrough ? `<s>${item.name}</s>` : item.name;
+              document.querySelector(".items").appendChild(li);
+            });
           });
-        });
-    }
-
+      } else {
+        fetch("/api/lists")
+          .then((res) => res.json())
+          .then((data) => {
+            document.querySelector(".links").innerHTML = "";
+            data.forEach((list) => {
+              const a = document.createElement("a");
+              a.innerText = list.name;
+              a.href = `/${list.path}`;
+              document.querySelector(".links").appendChild(a);
+            });
+          });
+      }
     }
   </script>
 </html>

@@ -46,6 +46,21 @@ app.get("/api/lists", (req, res) => {
   res.json(lists);
 });
 
+app.get("/api/lists/:id", (req, res) => {
+    const id = req.params.id;
+
+    const lists = JSON.parse(fs.readFileSync("lists.json", "utf8")) as List[];
+
+    const list = lists.find((list) => list.path === id);
+
+    if (!list) {
+        res.status(404).send("List not found");
+        return;
+    }
+
+    res.json(list);
+});
+
 app.post("/api/lists", (req, res) => {
   const name = req.body.name as string;
   const path = req.body.path as string;

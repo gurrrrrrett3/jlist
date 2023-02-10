@@ -24,7 +24,6 @@
     </div>
   </body>
   <script>
-    const listData = JSON.parse("{}");
     const listId = window.location.pathname.split("/")[2];
 
     if (window.location.pathname !== "/admin") {
@@ -46,82 +45,87 @@
 
     function updateList() {
       document.querySelector(".items").innerHTML = "";
-      if (Object.keys(listData).length !== 0) {
-        listData.items.forEach((item, index) => {
-          const li = document.createElement("li");
-          li.innerHTML = item.strikethrough ? `<s>${item.name}</s>` : item.name;
-          li.addEventListener("click", (ev) => {
-            fetch(`/api/lists/${listId}/items/${index}/strike`, {
-              method: "POST",
-            }).then((res) => {
-              if (res.status === 200) {
-              res.json().then((data) => {
-                li.innerHTML = data.strikethrough ? `<s>${data.name}</s>` : data.name;
+
+      if (listId !== undefined) {
+        fetch(`/api/lists/${listId}`)
+          .then((res) => res.json())
+          .then((listData) => {
+            listData.items.forEach((item, index) => {
+              const li = document.createElement("li");
+              li.innerHTML = item.strikethrough ? `<s>${item.name}</s>` : item.name;
+              li.addEventListener("click", (ev) => {
+                fetch(`/api/lists/${listId}/items/${index}/strike`, {
+                  method: "POST",
+                }).then((res) => {
+                  if (res.status === 200) {
+                    res.json().then((data) => {
+                      li.innerHTML = data.strikethrough ? `<s>${data.name}</s>` : data.name;
+                    });
+                  }
+                });
               });
-              }
-            });
-          });
 
-          const input = document.createElement("input");
-            input.type = "text";
-            input.value = item.reason || "";
-            input.placeholder = "reason";
-            const  button = document.createElement("button");
-            button.innerText = "set";
-            button.addEventListener("click", (ev) => {
-              ev.preventDefault();
-              fetch(`/api/lists/${listId}/items/${index}/reason`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  reason: input.value,
-                }),
+              const input = document.createElement("input");
+              input.type = "text";
+              input.value = item.reason || "";
+              input.placeholder = "reason";
+              const button = document.createElement("button");
+              button.innerText = "set";
+              button.addEventListener("click", (ev) => {
+                ev.preventDefault();
+                fetch(`/api/lists/${listId}/items/${index}/reason`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    reason: input.value,
+                  }),
+                });
               });
+
+              const div = document.createElement("div");
+              div.appendChild(input);
+              div.appendChild(button);
+
+              const del = document.createElement("button");
+              del.innerText = "delete";
+              del.addEventListener("click", (ev) => {
+                ev.preventDefault();
+                fetch(`/api/lists/${listId}/items/${index}`, {
+                  method: "DELETE",
+                }).then((res) => {
+                  if (res.status === 200) {
+                    li.remove();
+                    div.remove();
+                    window.location.reload();
+                    updateList();
+                  }
+                });
+              });
+
+              div.appendChild(del);
+
+              document.querySelector(".items").appendChild(li);
+              document.querySelector(".items").appendChild(div);
             });
 
-            const div = document.createElement("div");
-            div.appendChild(input);
-            div.appendChild(button);
+            const removeList = document.createElement("button");
+            removeList.innerText = "Delete List";
 
-            const del = document.createElement("button");
-            del.innerText = "delete";
-            del.addEventListener("click", (ev) => {
+            removeList.addEventListener("click", (ev) => {
               ev.preventDefault();
-              fetch(`/api/lists/${listId}/items/${index}`, {
+              fetch(`/api/lists/${listId}`, {
                 method: "DELETE",
               }).then((res) => {
                 if (res.status === 200) {
-                  li.remove();
-                  div.remove();
-                  window.location.reload();
-                  updateList();
+                  window.location.pathname = "/admin";
                 }
               });
             });
-        
-            div.appendChild(del);
 
-            document.querySelector(".items").appendChild(li);
-            document.querySelector(".items").appendChild(div);
-        });
-
-        const removeList = document.createElement("button");
-        removeList.innerText = "Delete List";
-
-        removeList.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          fetch(`/api/lists/${listId}`, {
-            method: "DELETE",
-          }).then((res) => {
-            if (res.status === 200) {
-              window.location.pathname = "/admin";
-            }
+            document.querySelector(".header").appendChild(removeList);
           });
-        });
-
-        document.querySelector(".header").appendChild(removeList);
       }
 
       if (window.location.pathname !== "/admin") {
