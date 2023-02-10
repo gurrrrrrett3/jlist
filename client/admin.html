@@ -16,7 +16,7 @@
     </div>
 
     <p id="msg" hidden>
-      Use the form at the bottom of the list to add items. Click on an item to cross it out.
+      Use the form below of the list to add items. Click on an item to cross it out.
     </p>
 
     <div class="list">
@@ -114,7 +114,6 @@
             removeList.innerText = "Delete List";
 
             removeList.addEventListener("click", (ev) => {
-              ev.preventDefault();
               fetch(`/api/lists/${listId}`, {
                 method: "DELETE",
               }).then((res) => {

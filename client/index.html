@@ -19,9 +19,9 @@
     </div>
   </body>
   <script>
-    const listId = window.location.pathname.split("/")[2];
+    const listId = window.location.pathname.split("/")[1];
 
-    updateList();
+    updateList(listId);
 
     // admin panel
 
@@ -46,17 +46,15 @@
       });
     });
 
-    function updateList() {
+    async function updateList(listId) {
       if (listId !== undefined) {
-        fetch(`/api/lists/${listId}`)
-          .then((res) => res.json())
-          .then((listData) => {
-            listData.items.forEach((item) => {
-              const li = document.createElement("li");
-              li.innerHTML = item.strikethrough ? `<s>${item.name}</s>` : item.name;
-              document.querySelector(".items").appendChild(li);
-            });
-          });
+        const listData = await fetch(`/api/lists/${listId}`).then((res) =>res.json());
+        console.log(listData);
+        listData.items.forEach((item) => {
+          const li = document.createElement("li");
+          li.innerHTML = (item.strikethrough ? `<s>${item.name}</s>` : item.name) + (item.reason ? (" - " + (item.reason || "")) : "");
+          document.querySelector(".items").appendChild(li);
+        });
       } else {
         fetch("/api/lists")
           .then((res) => res.json())
