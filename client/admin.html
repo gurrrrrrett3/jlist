@@ -46,7 +46,7 @@
     function updateList() {
       document.querySelector(".items").innerHTML = "";
 
-      if (listId !== undefined) {
+      if (listId !== "") {
         fetch(`/api/lists/${listId}`)
           .then((res) => res.json())
           .then((listData) => {
