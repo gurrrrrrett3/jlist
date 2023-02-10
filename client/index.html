@@ -47,7 +47,7 @@
     });
 
     async function updateList(listId) {
-      if (listId !== undefined) {
+      if (listId !== "") {
         const listData = await fetch(`/api/lists/${listId}`).then((res) =>res.json());
         console.log(listData);
         listData.items.forEach((item) => {
