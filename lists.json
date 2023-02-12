@@ -3,43 +3,7 @@
         "name": "Enemy List",
         "path": "enemies",
         "items": [
-            {
-                "name": "checkraisefold",
-                "addDate": "2023-02-10T18:16:08.401Z",
-                "reason": "made rosaclassic",
-                "strikethrough": false
-            },
-            {
-                "name": "crypticsea",
-                "addDate": "2023-02-10T18:16:36.514Z",
-                "reason": "bald"
-            },
-            {
-                "name": "noche",
-                "addDate": "2023-02-10T18:16:58.165Z",
-                "reason": "he has since released my family members",
-                "strikethrough": false
-            },
-            {
-                "name": "HP Lovecraft's Cat",
-                "addDate": "2023-02-10T18:18:29.985Z",
-                "reason": "wont buy bitcoin"
-            },
-            {
-                "name": "Kaeporah",
-                "addDate": "2023-02-10T18:18:41.270Z",
-                "reason": ""
-            },
-            {
-                "name": "\"that guy\"",
-                "addDate": "2023-02-10T18:19:00.050Z",
-                "reason": "[We dont know what guy]"
-            },
-            {
-                "name": "D44Diver",
-                "addDate": "2023-02-10T18:19:10.672Z",
-                "reason": "He asked to be added."
-            }
+          
         ]
     }
 ]
